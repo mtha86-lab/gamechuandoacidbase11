@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thử Thách Chuẩn Độ Acid-Base | Game Hóa Học 11</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --primary-light: #e0f2fe;
+            --secondary: #38bdf8;
+            --accent: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --card-bg: rgba(255, 255, 255, 0.96);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Nunito', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #0369a1 50%, #0c4a6e 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            color: var(--text-main);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(2px);
+            animation: floatUp 8s infinite linear;
+            bottom: -50px;
+            z-index: 0;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-110vh) scale(1.2); opacity: 0; }
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 820px;
+            background: var(--card-bg);
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            position: relative;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .screen {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out forwards;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .game-title {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            font-weight: 600;
+            margin-bottom: 25px;
+            font-size: 1rem;
+        }
+
+        .mascot-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--primary-light);
+            border: 2px solid var(--secondary);
+            border-radius: 20px;
+            padding: 15px 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.1);
+        }
+
+        .mascot-avatar {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+            border: 3px solid var(--primary);
+            font-size: 2rem;
+            animation: bounceMascot 2s infinite ease-in-out;
+        }
+
+        @keyframes bounceMascot {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .mascot-speech {
+            position: relative;
+            background: white;
+            border-radius: 14px;
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-main);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            flex-grow: 1;
+            line-height: 1.4;
+        }
+
+        .mascot-speech::before {
+            content: '';
+            position: absolute;
+            left: -10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-width: 8px 10px 8px 0;
+            border-style: solid;
+            border-color: transparent white transparent transparent;
+        }
+
+        .lab-illustration {
+            width: 100%;
+            max-width: 160px;
+            height: 140px;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: var(--primary-dark);
+        }
+
+        .input-group input {
+            width: 80%;
+            max-width: 320px;
+            padding: 12px 18px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            text-align: center;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus {
+            border-color: var(--primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(2, 132, 199, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+            box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+        }
+
+        .btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .rules-card {
+            background: var(--primary-light);
+            border-left: 5px solid var(--primary);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .rules-card h3 {
+            color: var(--primary-dark);
+            margin-bottom: 10px;
+        }
+
+        .rules-card ul {
+            padding-left: 20px;
+        }
+
+        .rules-card li {
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #f1f5f9;
+            padding: 12px 20px;
+            border-radius: 16px;
+        }
+
+        .quiz-info-box {
+            font-weight: 800;
+            color: var(--primary-dark);
+            font-size: 0.95rem;
+        }
+
+        .score-badge {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 800;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .option-btn {
+            background: #ffffff;
+            border: 2px solid #e2e8f0;
+            padding: 14px 18px;
+            border-radius: 14px;
+            text-align: left;
+            font-size: 1rem;
+            font-weight: 700;
+            color: #334155;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background: var(--primary-light);
+            transform: translateY(-1px);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7 !important;
+            border-color: var(--success) !important;
+            color: #15803d !important;
+        }
+
+        .option-btn.wrong {
+            background: #fee2e2 !important;
+            border-color: var(--danger) !important;
+            color: #b91c1c !important;
+        }
+
+        .option-prefix {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .explanation-box {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e1;
+            padding: 15px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .explanation-box.show {
+            display: block;
+        }
+
+        .explanation-title {
+            font-weight: 800;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .result-box {
+            text-align: center;
+            padding: 25px 20px;
+            background: #f8fafc;
+            border-radius: 20px;
+            border: 2px solid #e2e8f0;
+            margin: 20px 0;
+        }
+
+        .final-score {
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--primary-dark);
+            margin: 10px 0;
+        }
+
+        .remark-tag {
+            display: inline-block;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        /* KHU VỰC XEM LẠI BÀI LÀM */
+        .review-list {
+            max-height: 500px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding-right: 5px;
+        }
+
+        .review-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .review-card.correct-card {
+            border-left: 6px solid var(--success);
+        }
+
+        .review-card.wrong-card {
+            border-left: 6px solid var(--danger);
+        }
+
+        .review-q-title {
+            font-weight: 800;
+            font-size: 1.05rem;
+            color: #0f172a;
+            margin-bottom: 12px;
+        }
+
+        .review-option {
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+            background: #f8fafc;
+            color: #475569;
+        }
+
+        .review-option.user-correct {
+            background: #dcfce7;
+            color: #15803d;
+            border: 1px solid var(--success);
+        }
+
+        .review-option.user-wrong {
+            background: #fee2e2;
+            color: #b91c1c;
+            border: 1px solid var(--danger);
+        }
+
+        .review-option.true-ans {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: 1px dashed var(--primary);
+        }
+
+        .review-explain {
+            margin-top: 10px;
+            padding: 10px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            font-size: 0.9rem;
+            color: #334155;
+            line-height: 1.4;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="bubbles-container"></div>
+
+    <div class="game-card">
+
+        <!-- 1. MÀN HÌNH BẮT ĐẦU -->
+        <div id="start-screen" class="screen active">
+            <svg class="lab-illustration" viewBox="0 0 200 180">
+                <path d="M70 140 L70 30 L130 30 L130 140 Z" fill="none" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+                <path d="M50 140 L150 140" stroke="#94a3b8" stroke-width="6" stroke-linecap="round"/>
+                <rect x="96" y="20" width="8" height="90" fill="#e2e8f0" stroke="#0284c7" stroke-width="2"/>
+                <line x1="94" y1="90" x2="106" y2="90" stroke="#ef4444" stroke-width="3"/>
+                <path d="M90 120 L70 155 A 5 5 0 0 0 75 162 L125 162 A 5 5 0 0 0 130 155 L110 120 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+                <path id="svg-liquid" d="M75 152 L80 140 L120 140 L125 152 A 3 3 0 0 1 122 158 L78 158 A 3 3 0 0 1 75 152 Z" fill="#f43f5e" opacity="0.8">
+                    <animate attributeName="fill" values="#f43f5e;#38bdf8;#f43f5e" dur="4s" repeatCount="indefinite"/>
+                </path>
+                <circle cx="100" cy="105" r="2.5" fill="#38bdf8">
+                    <animate attributeName="cy" values="100;125" dur="1.2s" repeatCount="indefinite"/>
+                    <animate attributeName="opacity" values="1;0" dur="1.2s" repeatCount="indefinite"/>
+                </circle>
+            </svg>
+
+            <h1 class="game-title">Thử Thách Chuẩn Độ</h1>
+            <p class="subtitle">Chương trình Hóa Học Lớp 11 THPT - Acid & Base</p>
+
+            <div class="mascot-container">
+                <div class="mascot-avatar">👨‍🔬</div>
+                <div class="mascot-speech" id="start-mascot-speech">
+                    Chào em! Thầy là <strong>Dr. H</strong> - trợ lý phòng thí nghiệm của em. Sẵn sàng chinh phục 20 câu hỏi chuẩn độ cùng thầy chưa nào?
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="player-name">Nhập Tên Học Sinh / Lớp:</label>
+                <input type="text" id="player-name" placeholder="Ví dụ: Nguyễn Văn A - 11A1" maxlength="25" value="Học sinh Hóa 11">
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="showScreen('quiz-screen'); startQuiz();">
+                    🚀 Bắt Đầu Ngay
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('guide-screen');">
+                    📖 Hướng Dẫn
+                </button>
+            </div>
+        </div>
+
+        <!-- 2. MÀN HÌNH HƯỚNG DẪN -->
+        <div id="guide-screen" class="screen">
+            <h1 class="game-title">Hướng Dẫn Trò Chơi</h1>
+            <p class="subtitle">Nắm rõ luật chơi để đạt điểm tối đa!</p>
+
+            <div class="mascot-container">
+                <div class="mascot-avatar">👨‍🔬</div>
+                <div class="mascot-speech">
+                    Đừng lo lắng! Hãy đọc kỹ các quy tắc dưới đây để thực hành chuẩn độ đạt kết quả tốt nhất nhé.
+                </div>
+            </div>
+
+            <div class="rules-card">
+                <h3>🧪 Thể lệ & Cách tính điểm:</h3>
+                <ul>
+                    <li>Bộ đề gồm <strong>20 câu hỏi trắc nghiệm</strong> xoay quanh kiến thức Chuẩn độ Acid - Base.</li>
+                    <li>Mỗi câu đúng nhận <strong>+10 điểm</strong>. Không trừ điểm khi chọn sai.</li>
+                    <li>Thầy sẽ đồng hành giải thích chi tiết sau mỗi câu hỏi để giúp em ôn tập sâu hơn.</li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn" onclick="showScreen('quiz-screen'); startQuiz();">
+                    🧪 Vào Phòng Thí Nghiệm
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('start-screen');">
+                    ⬅ Quay Lại
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. MÀN HÌNH CÂU HỎI -->
+        <div id="quiz-screen" class="screen">
+            <div class="quiz-header">
+                <div class="quiz-info-box">
+                    Câu hỏi: <span id="current-question-num">1</span>/20
+                </div>
+                <div class="score-badge">
+                    Điểm: <span id="current-score">0</span>
+                </div>
+            </div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+
+            <div class="mascot-container" style="margin-bottom: 15px; padding: 10px 15px;">
+                <div class="mascot-avatar" style="width: 50px; height: 50px; font-size: 1.4rem;">👨‍🔬</div>
+                <div class="mascot-speech" id="quiz-mascot-speech" style="font-size: 0.9rem;">
+                    Hãy suy nghĩ thật kỹ trước khi chọn đáp án nhé!
+                </div>
+            </div>
+
+            <div class="question-text" id="question-text">
+                Nội dung câu hỏi sẽ hiển thị ở đây...
+            </div>
+
+            <div class="options-grid" id="options-container"></div>
+
+            <div class="explanation-box" id="explanation-box">
+                <div class="explanation-title" id="explanation-status">
+                    💡 Giải thích đáp án:
+                </div>
+                <div id="explanation-text" style="font-size: 0.95rem; color: #334155;"></div>
+            </div>
+
+            <div class="btn-group" style="justify-content: flex-end;">
+                <button class="btn" id="next-btn" onclick="nextQuestion()" disabled>
+                    Câu Tiếp Theo ➡
+                </button>
+            </div>
+        </div>
+
+        <!-- 4. MÀN HÌNH KẾT QUẢ -->
+        <div id="result-screen" class="screen">
+            <h1 class="game-title">Kết Quả Thử Thách</h1>
+            <p class="subtitle" id="result-player-name">Người chơi: Nguyễn Văn A</p>
+
+            <div class="mascot-container">
+                <div class="mascot-avatar">👨‍🔬</div>
+                <div class="mascot-speech" id="result-mascot-speech">
+                    Tuyệt vời! Em đã hoàn thành xong thử thách phòng thí nghiệm.
+                </div>
+            </div>
+
+            <div class="result-box">
+                <div style="font-weight: 700; color: var(--text-muted);">Tổng điểm đạt được:</div>
+                <div class="final-score" id="final-score-text">180 / 200</div>
+                <div class="remark-tag" id="remark-tag">Bạn làm rất tốt</div>
+                <p id="result-detail-text" style="color: var(--text-main); font-weight: 700; font-size: 1.05rem; line-height: 1.6;"></p>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-info" onclick="showScreen('review-screen'); renderReview();">
+                    🔍 Xem Lại Bài Làm
+                </button>
+                <button class="btn" onclick="showScreen('quiz-screen'); startQuiz();">
+                    🔄 Chơi Lại
+                </button>
+                <button class="btn btn-secondary" onclick="showScreen('start-screen');">
+                    🏠 Màn Hình Chính
+                </button>
+            </div>
+        </div>
+
+        <!-- 5. MÀN HÌNH XEM LẠI BÀI LÀM -->
+        <div id="review-screen" class="screen">
+            <h1 class="game-title">Xem Lại & Sửa Sai</h1>
+            <p class="subtitle">Chi tiết 20 câu hỏi và lời giải đáp của Dr. H</p>
+
+            <div class="review-list" id="review-container"></div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="showScreen('result-screen');">
+                    ⬅ Quay Lại Kết Quả
+                </button>
+                <button class="btn" onclick="showScreen('quiz-screen'); startQuiz();">
+                    🔄 Chơi Lại Game
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            Game Giáo Dục Hóa Học 11 • Chuẩn Độ Acid-Base • Chương Trình GDPT Mới
+        </footer>
+    </div>
+
+    <script>
+        const questionsData = [
+            {
+                q: "Phương pháp chuẩn độ acid - base dùng để làm gì?",
+                options: [
+                    "Xác định thể tích của chất khí sinh ra.",
+                    "Xác định nồng độ của một dung dịch acid hoặc base chưa biết.",
+                    "Tách riêng acid và base ra khỏi hỗn hợp.",
+                    "Đo nhiệt độ sôi của dung dịch acid."
+                ],
+                correct: 1,
+                explain: "Phương pháp chuẩn độ acid - base được dùng để xác định nồng độ của một dung dịch acid hoặc base chưa biết nồng độ bằng một dung dịch chuẩn đã biết chính xác nồng độ."
+            },
+            {
+                q: "Trong kỹ thuật chuẩn độ acid - base, dung dịch đã biết chính xác nồng độ được gọi là gì?",
+                options: [
+                    "Dung dịch chỉ thị",
+                    "Dung dịch đệm",
+                    "Dung dịch chuẩn",
+                    "Dung dịch bão hòa"
+                ],
+                correct: 2,
+                explain: "Dung dịch đã biết chính xác nồng độ dùng để đo thể tích khi chuẩn độ gọi là dung dịch chuẩn."
+            },
+            {
+                q: "Dụng cụ thuỷ tinh có vạch chia độ chính xác, có khoá xả ở phía dưới dùng để nhỏ từ từ dung dịch chuẩn gọi là gì?",
+                options: [
+                    "Pipette (Ống hút)",
+                    "Burette (Ống chuẩn độ)",
+                    "Ống nghiệm",
+                    "Bình định mức"
+                ],
+                correct: 1,
+                explain: "Burette (buret) là dụng cụ chuyên dụng trong chuẩn độ, có vạch chia thể tích chính xác và có khóa xả dung dịch."
+            },
+            {
+                q: "Dụng cụ dùng để lấy chính xác một thể tích dung dịch acid/base cho vào bình tam giác trước khi chuẩn độ là:",
+                options: [
+                    "Pipette",
+                    "Ống đong",
+                    "Cốc thủy tinh",
+                    "Bình cầu"
+                ],
+                correct: 0,
+                explain: "Pipette (pipet) được dùng để lấy chính xác một thể tích cố định dung dịch cần chuẩn độ vào bình tam giác."
+            },
+            {
+                q: "Thời điểm mà acid và base phản ứng vừa đủ với nhau theo đúng tỉ lệ gọi là gì?",
+                options: [
+                    "Điểm cân bằng",
+                    "Điểm tương đương",
+                    "Điểm dừng",
+                    "Điểm trung hòa pH = 0"
+                ],
+                correct: 1,
+                explain: "Điểm tương đương là thời điểm acid và base đã phản ứng vừa đủ với nhau theo đúng tỉ lệ phương trình hóa học."
+            },
+            {
+                q: "Hiện tượng nào giúp chúng ta nhận biết được điểm kết thúc chuẩn độ trong thực hành?",
+                options: [
+                    "Có khí thoát ra mãnh liệt",
+                    "Có kết tủa xuất hiện",
+                    "Sự đổi màu đột ngột của chất chỉ thị",
+                    "Dung dịch phát sáng"
+                ],
+                correct: 2,
+                explain: "Điểm kết thúc chuẩn độ được nhận biết nhờ sự đổi màu rõ rệt của chất chỉ thị acid-base."
+            },
+            {
+                q: "Chất chỉ thị phenolphthalein chuyển sang màu gì khi môi trường chuyển từ acid sang base (pH > 8.3)?",
+                options: [
+                    "Màu da cam",
+                    "Màu xanh lam",
+                    "Màu hồng/tím hồng",
+                    "Không màu"
+                ],
+                correct: 2,
+                explain: "Phenolphthalein không màu trong môi trường acid/trung tính và chuyển sang màu hồng nhạt khi môi trường chuyển sang base."
+            },
+            {
+                q: "Chất chỉ thị methyl orange (methyl da cam) trong môi trường acid (pH < 3.1) có màu gì?",
+                options: [
+                    "Màu đỏ",
+                    "Màu vàng",
+                    "Màu xanh",
+                    "Không màu"
+                ],
+                correct: 0,
+                explain: "Methyl orange có màu đỏ trong môi trường acid mạnh (pH < 3.1) và chuyển sang màu vàng trong môi trường ít acid hơn/base (pH > 4.4)."
+            },
+            {
+                q: "Khi chuẩn độ dung dịch HCl bằng dung dịch chuẩn NaOH với chỉ thị phenolphthalein, điểm kết thúc nhận biết khi nào?",
+                options: [
+                    "Dung dịch mất màu hoàn toàn.",
+                    "Dung dịch chuyển từ không màu sang xuất hiện màu hồng nhạt bền trong khoảng 30 giây.",
+                    "Dung dịch xuất hiện váng đục.",
+                    "Dung dịch chuyển từ màu hồng sang không màu."
+                ],
+                correct: 1,
+                explain: "Ban đầu bình chứa HCl + phenolphthalein không màu. Khi nhỏ NaOH tới dư rất ít, dung dịch sẽ chuyển sang màu hồng nhạt bền vững."
+            },
+            {
+                q: "Phương trình hóa học ion thu gọn của phản ứng chuẩn độ HCl bằng NaOH là gì?",
+                options: [
+                    "Na⁺ + Cl⁻ ➔ NaCl",
+                    "H⁺ + OH⁻ ➔ H₂O",
+                    "HCl + NaOH ➔ NaCl + H₂O",
+                    "H⁺ + Cl⁻ ➔ HCl"
+                ],
+                correct: 1,
+                explain: "Phản ứng bản chất giữa acid mạnh HCl và base mạnh NaOH là phản ứng trung hòa: H⁺ + OH⁻ ➔ H₂O."
+            },
+            {
+                q: "Trong quá trình chuẩn độ dung dịch HCl bằng dung dịch chuẩn NaOH, phát biểu nào sau đây là ĐÚNG?",
+                options: [
+                    "Trước điểm tương đương, dung dịch trong bình tam giác dư OH⁻.",
+                    "Tại điểm tương đương, số mol H⁺ phản ứng vừa đủ với số mol OH⁻.",
+                    "Chất chỉ thị phenolphthalein đổi màu trước khi phản ứng trung hòa xảy ra.",
+                    "Thể tích dung dịch trong buret luôn giữ nguyên không đổi."
+                ],
+                correct: 1,
+                explain: "Tại điểm tương đương, số mol acid (H⁺) đã phản ứng vừa đủ hoàn toàn với số mol base (OH⁻) theo đúng tỉ lệ phản ứng."
+            },
+            {
+                q: "Dùng 10,0 mL dung dịch HCl chưa biết nồng độ, chuẩn độ vừa đủ với 15,0 mL dung dịch NaOH 0,10 M. Nồng độ mol của HCl là:",
+                options: [
+                    "0,05 M",
+                    "0,10 M",
+                    "0,15 M",
+                    "0,20 M"
+                ],
+                correct: 2,
+                explain: "Áp dụng công thức: C_HCl = (C_NaOH . V_NaOH) / V_HCl = (0,10 . 15,0) / 10,0 = 0,15 M."
+            },
+            {
+                q: "Thực hiện chuẩn độ 20,0 mL dung dịch NaOH bằng dung dịch chuẩn H₂SO₄ 0,10 M. Thể tích H₂SO₄ tiêu tốn là 10,0 mL. Nồng độ của NaOH là:",
+                options: [
+                    "0,10 M",
+                    "0,05 M",
+                    "0,20 M",
+                    "0,15 M"
+                ],
+                correct: 0,
+                explain: "Phản ứng: 2NaOH + H₂SO₄ ➔ Na₂SO₄ + 2H₂O. n_H₂SO₄ = 0,10 . 0,01 = 0,001 mol ➔ n_NaOH = 2 . n_H₂SO₄ = 0,002 mol. C_NaOH = 0,002 / 0,02 = 0,10 M."
+            },
+            {
+                q: "Thao tác nào sau đây KHÔNG ĐÚNG khi làm thực hành chuẩn độ trên Burette?",
+                options: [
+                    "Tráng burette bằng nước cất rồi tráng lại bằng dung dịch chuẩn trước khi nạp dung dịch.",
+                    "Để lại bọt khí ở đuôi burette khi bắt đầu đọc thể tích ban đầu.",
+                    "Đặt mắt nhìn ngang bằng với đáy lõm của giọt chất lỏng để đọc thể tích.",
+                    "Lắc nhẹ bình tam giác đều đặn trong quá trình nhỏ dung dịch."
+                ],
+                correct: 1,
+                explain: "Nếu để lại bọt khí ở đuôi burette sẽ dẫn đến sai số thể tích lớn trong quá trình chuẩn độ. Cần xả đuổi hết bọt khí trước khi đọc thể tích ban đầu."
+            },
+            {
+                q: "Tại sao nên lót một tờ giấy trắng phía dưới đáy bình tam giác khi tiến hành chuẩn độ?",
+                options: [
+                    "Để tránh dung dịch đổ ra bàn.",
+                    "Để dễ dàng quan sát sự đổi màu của chất chỉ thị.",
+                    "Để giữ ấm cho bình tam giác.",
+                    "Để cố định bình tam giác không bị xê dịch."
+                ],
+                correct: 1,
+                explain: "Nền trắng giúp mắt người quan sát dễ dàng nhận biết sự đổi màu đột ngột nhẹ nhất của chất chỉ thị tại điểm kết thúc."
+            },
+            {
+                q: "Khi chuẩn độ acid yếu CH₃COOH bằng base mạnh NaOH, tại điểm tương đương dung dịch có môi trường gì?",
+                options: [
+                    "Môi trường acid (pH < 7)",
+                    "Môi trường trung tính (pH = 7)",
+                    "Môi trường base (pH > 7)",
+                    "Môi trường rất acid (pH = 1)"
+                ],
+                correct: 2,
+                explain: "Tại điểm tương đương tạo thành muối CH₃COONa. Ion CH₃COO⁻ bị thủy phân tạo môi trường base yếu (pH > 7). Do đó phenolphthalein là chỉ thị rất phù hợp."
+            },
+            {
+                q: "Khi đọc thể tích trên burette, vị trí mắt đặt như thế nào là chính xác?",
+                options: [
+                    "Nhìn từ trên xuống.",
+                    "Nhìn từ dưới lên.",
+                    "Đặt mắt ngang với mức mặt lõm của chất lỏng.",
+                    "Nhìn nghiêng 45 độ."
+                ],
+                correct: 2,
+                explain: "Mắt phải đặt ngang tầm với đáy của mặt lõm chất lỏng trên vạch chia của burette để tránh lỗi lệch góc nhìn (parallax error)."
+            },
+            {
+                q: "Tráng burette bằng chính dung dịch chuẩn trước khi đổ đầy dung dịch vào nhằm mục đích gì?",
+                options: [
+                    "Làm sạch bụi bẩn.",
+                    "Tránh làm đọng nước cất làm pha loãng nồng độ dung dịch chuẩn.",
+                    "Làm cho dung dịch chảy nhanh hơn.",
+                    "Tăng độ bền của thủy tinh."
+                ],
+                correct: 1,
+                explain: "Tráng bằng chính dung dịch chuẩn để loại bỏ giọt nước cất thừa bám trên thành, giữ cho nồng độ dung dịch chuẩn chính xác tuyệt đối."
+            },
+            {
+                q: "Học sinh thực hiện 3 lần chuẩn độ thu được thể tích NaOH tiêu tốn lần lượt là: 12,10 mL; 12,20 mL; 12,15 mL. Thể tích trung bình được tính là:",
+                options: [
+                    "12,10 mL",
+                    "12,15 mL",
+                    "12,20 mL",
+                    "12,18 mL"
+                ],
+                correct: 1,
+                explain: "V_trung bình = (12,10 + 12,20 + 12,15) / 3 = 12,15 mL. Việc lấy trung bình các lần chuẩn độ giúp giảm sai số ngẫu nhiên."
+            },
+            {
+                q: "Vì sao trong phương pháp chuẩn độ acid - base, ta chỉ nên cho 1 - 2 giọt dung dịch chỉ thị vào bình tam giác?",
+                options: [
+                    "Tiết kiệm hóa chất.",
+                    "Vì chất chỉ thị bản thân cũng là các acid/base yếu, dùng nhiều sẽ gây sai số kết quả chuẩn độ.",
+                    "Dùng nhiều chỉ thị sẽ khiến dung dịch bốc khói độc.",
+                    "Chỉ thị làm hỏng bình tam giác."
+                ],
+                correct: 1,
+                explain: "Bản thân các chất chỉ thị là acid/base yếu. Cho quá nhiều chỉ thị sẽ làm tiêu tốn một lượng dung dịch chuẩn để trung hòa chính chỉ thị, dẫn tới sai số."
+            }
+        ];
+
+        let currentQuestionIdx = 0;
+        let score = 0;
+        let playerName = "Học sinh Hóa 11";
+        let isOptionSelected = false;
+        let userAnswers = []; // Mảng lưu câu trả lời của người chơi
+
+        function createBubbles() {
+            const container = document.getElementById('bubbles-container');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 30 + 10;
+                bubble.style.width = `${size}px`;
+                bubble.style.height = `${size}px`;
+                bubble.style.left = `${Math.random() * 100}%`;
+                bubble.style.animationDuration = `${Math.random() * 6 + 6}s`;
+                bubble.style.animationDelay = `${Math.random() * 4}s`;
+                container.appendChild(bubble);
+            }
+        }
+        createBubbles();
+
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'wrong') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(220, audioCtx.currentTime);
+                osc.frequency.setValueAtTime(164.81, audioCtx.currentTime + 0.15);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start();
+                osc.stop(audioCtx.currentTime + 0.3);
+            }
+        }
+
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        function startQuiz() {
+            const inputVal = document.getElementById('player-name').value.trim();
+            if (inputVal) playerName = inputVal;
+
+            currentQuestionIdx = 0;
+            score = 0;
+            userAnswers = [];
+            updateScoreUI();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            isOptionSelected = false;
+            const qData = questionsData[currentQuestionIdx];
+
+            document.getElementById('current-question-num').innerText = currentQuestionIdx + 1;
+            const progressPercent = ((currentQuestionIdx + 1) / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
+
+            document.getElementById('question-text').innerText = `${currentQuestionIdx + 1}. ${qData.q}`;
+
+            document.getElementById('explanation-box').classList.remove('show');
+            document.getElementById('next-btn').disabled = true;
+            document.getElementById('quiz-mascot-speech').innerHTML = `Câu hỏi số ${currentQuestionIdx + 1}: Hãy đọc kỹ đề bài và chọn phương án chính xác nhất nhé!`;
+
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const prefixes = ['A', 'B', 'C', 'D'];
+            qData.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.onclick = () => selectOption(idx);
+                btn.innerHTML = `
+                    <span class="option-prefix">${prefixes[idx]}</span>
+                    <span>${opt}</span>
+                `;
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(selectedIdx) {
+            if (isOptionSelected) return;
+            isOptionSelected = true;
+
+            const qData = questionsData[currentQuestionIdx];
+            const optionBtns = document.querySelectorAll('.option-btn');
+
+            optionBtns.forEach(btn => btn.disabled = true);
+
+            userAnswers[currentQuestionIdx] = selectedIdx; // Lưu vết bài làm
+
+            if (selectedIdx === qData.correct) {
+                score += 10;
+                updateScoreUI();
+                optionBtns[selectedIdx].classList.add('correct');
+                playSound('correct');
+                document.getElementById('explanation-status').innerHTML = '✅ <span style="color: var(--success)">Chính xác! (+10 điểm)</span>';
+                document.getElementById('quiz-mascot-speech').innerHTML = '🎉 Giỏi lắm! Em đã chọn đúng đáp án của câu này.';
+            } else {
+                optionBtns[selectedIdx].classList.add('wrong');
+                optionBtns[qData.correct].classList.add('correct');
+                playSound('wrong');
+                document.getElementById('explanation-status').innerHTML = '❌ <span style="color: var(--danger)">Chưa chính xác!</span>';
+                document.getElementById('quiz-mascot-speech').innerHTML = '💡 Tiếc quá! Hãy xem phần giải thích bên dưới để rút kinh nghiệm nhé.';
+            }
+
+            document.getElementById('explanation-text').innerText = qData.explain;
+            document.getElementById('explanation-box').classList.add('show');
+
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function updateScoreUI() {
+            document.getElementById('current-score').innerText = score;
+        }
+
+        function nextQuestion() {
+            currentQuestionIdx++;
+            if (currentQuestionIdx < questionsData.length) {
+                loadQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            showScreen('result-screen');
+
+            document.getElementById('result-player-name').innerText = `Học sinh: ${playerName}`;
+            document.getElementById('final-score-text').innerText = `${score} / 200`;
+
+            const remarkTag = document.getElementById('remark-tag');
+            const detailText = document.getElementById('result-detail-text');
+            const mascotSpeechResult = document.getElementById('result-mascot-speech');
+
+            if (score < 100) {
+                remarkTag.innerText = "Bạn cần ôn tập thêm";
+                remarkTag.style.background = "#fee2e2";
+                remarkTag.style.color = "#b91c1c";
+                detailText.innerText = "Em chưa đạt đủ số điểm yêu cầu. Hãy bấm nút 'Xem lại bài làm' để sửa các câu bị sai nhé!";
+                mascotSpeechResult.innerHTML = `💪 Đừng nản lòng em nhé! Em có thể xem lại từng câu sai để nắm rõ kiến thức hơn.`;
+            } else if (score < 180) {
+                remarkTag.innerText = "Bạn làm tốt rồi";
+                remarkTag.style.background = "#e0f2fe";
+                remarkTag.style.color = "#0369a1";
+                detailText.innerText = "Kết quả rất khá! Em có thể xem lại bài làm để chỉnh sửa một vài câu còn vướng mắc.";
+                mascotSpeechResult.innerHTML = `👏 Thầy ghi nhận nỗ lực của em! Cố gắng xem lại các câu chưa đúng để đạt điểm tối đa lần sau.`;
+            } else {
+                remarkTag.innerText = "Bạn làm rất tốt";
+                remarkTag.style.background = "#dcfce7";
+                remarkTag.style.color = "#15803d";
+                detailText.innerText = "Xuất sắc! Em đã thể hiện sự am hiểu sâu sắc về kỹ thuật chuẩn độ, chỉ thị màu và tính toán hóa học.";
+                mascotSpeechResult.innerHTML = `🌟 Quá xuất sắc! Số điểm ${score}/200 chứng tỏ em là một học sinh giỏi thực thụ trong phòng thí nghiệm!`;
+            }
+        }
+
+        // Render danh sách Xem lại & Sửa sai
+        function renderReview() {
+            const container = document.getElementById('review-container');
+            container.innerHTML = '';
+            const prefixes = ['A', 'B', 'C', 'D'];
+
+            questionsData.forEach((qData, index) => {
+                const userChoice = userAnswers[index];
+                const isCorrect = userChoice === qData.correct;
+
+                const card = document.createElement('div');
+                card.className = `review-card ${isCorrect ? 'correct-card' : 'wrong-card'}`;
+
+                let optionsHTML = '';
+                qData.options.forEach((opt, idx) => {
+                    let optionClass = 'review-option';
+                    let statusLabel = '';
+
+                    if (idx === qData.correct && idx === userChoice) {
+                        optionClass += ' user-correct';
+                        statusLabel = ' (Đã chọn - Đúng ✅)';
+                    } else if (idx === userChoice && idx !== qData.correct) {
+                        optionClass += ' user-wrong';
+                        statusLabel = ' (Đã chọn - Sai ❌)';
+                    } else if (idx === qData.correct) {
+                        optionClass += ' true-ans';
+                        statusLabel = ' (Đáp án đúng ⭐)';
+                    }
+
+                    optionsHTML += `<div class="${optionClass}">${prefixes[idx]}. ${opt}${statusLabel}</div>`;
+                });
+
+                card.innerHTML = `
+                    <div class="review-q-title">
+                        Câu ${index + 1}: ${qData.q} ${isCorrect ? '✅' : '❌'}
+                    </div>
+                    ${optionsHTML}
+                    <div class="review-explain">
+                        <strong>💡 Giải thích của Dr. H:</strong> ${qData.explain}
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+    </script>
+</body>
+</html>
